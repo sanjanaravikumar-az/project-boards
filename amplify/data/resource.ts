@@ -1,4 +1,7 @@
-type QuoteResponse {
+import { defineData } from "@aws-amplify/backend";
+
+const branchName = process.env.AWS_BRANCH ?? "sandbox";
+const schema = `type QuoteResponse {
   message: String! @auth(rules: [{ allow: public }])
   quote: String! @auth(rules: [{ allow: public }])
   author: String! @auth(rules: [{ allow: public }])
@@ -7,7 +10,7 @@ type QuoteResponse {
 }
 
 type Query {
-  getRandomQuote: QuoteResponse @function(name: "quotegenerator-${env}") @auth(rules: [{ allow: public }])
+  getRandomQuote: QuoteResponse @function(name: "quotegenerator-${branchName}") @auth(rules: [{ allow: public }])
 }
 
 enum ProjectStatus {
@@ -40,3 +43,17 @@ type Todo @model @auth(rules: [
   images: [String]
   projectID: ID
 }
+`;
+
+export const data = defineData({
+    migratedAmplifyGen1DynamoDbTableMappings: [{
+            //The "branchname" variable needs to be the same as your deployment branch if you want to reuse your Gen1 app tables
+            branchName: "main",
+            modelNameToTableNameMapping: { Project: "Project-m7by52p6brfbze5ixsiguobjnq-main", Todo: "Todo-m7by52p6brfbze5ixsiguobjnq-main" }
+        }],
+    authorizationModes: {
+        defaultAuthorizationMode: "apiKey",
+        apiKeyAuthorizationMode: { expiresInDays: 7 }
+    },
+    schema
+});
