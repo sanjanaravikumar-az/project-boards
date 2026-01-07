@@ -1,0 +1,32 @@
+{
+  "main": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-projectboards-main-39290-authRole",
+      "UnauthRoleArn": "arn:aws:iam::079385506759:role/amplify-projectboards-main-39290-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::079385506759:role/amplify-projectboards-main-39290-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-projectboards-main-39290-deployment",
+      "UnauthRoleName": "amplify-projectboards-main-39290-unauthRole",
+      "StackName": "amplify-projectboards-main-39290",
+      "StackId": "arn:aws:cloudformation:us-east-1:079385506759:stack/amplify-projectboards-main-39290/2403b1f0-ec0c-11f0-9b4d-1287e3618f17",
+      "AmplifyAppId": "d3t3sekmhbaq16"
+    },
+    "categories": {
+      "auth": {
+        "projectboardsd0329bab": {}
+      },
+      "function": {
+        "quotegenerator": {
+          "deploymentBucketName": "amplify-projectboards-main-39290-deployment",
+          "s3Key": "amplify-builds/quotegenerator-65733141454d50566848-build.zip"
+        }
+      },
+      "api": {
+        "projectboards": {}
+      },
+      "storage": {
+        "s378e5cd69": {}
+      }
+    }
+  }
+}
