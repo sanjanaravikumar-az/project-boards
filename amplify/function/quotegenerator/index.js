@@ -2,7 +2,7 @@
  * AppSync Lambda function handler
  * When using @function directive, return data directly (not API Gateway proxy format)
  */
-exports.handler = async (event) => {
+export async function handler(event) {
   console.log(`EVENT: ${JSON.stringify(event)}`);
 
   // Array of motivational quotes

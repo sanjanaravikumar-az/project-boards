@@ -48,7 +48,7 @@ type Todo @model @auth(rules: [
 export const data = defineData({
     migratedAmplifyGen1DynamoDbTableMappings: [{
             //The "branchname" variable needs to be the same as your deployment branch if you want to reuse your Gen1 app tables
-            branchName: "main",
+            branchName: "gen2-main",
             modelNameToTableNameMapping: { Project: "Project-m7by52p6brfbze5ixsiguobjnq-main", Todo: "Todo-m7by52p6brfbze5ixsiguobjnq-main" }
         }],
     authorizationModes: {
