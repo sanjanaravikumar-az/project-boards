@@ -21,6 +21,9 @@ import { signIn, signOut, getCurrentUser } from 'aws-amplify/auth';
 import { uploadData, getUrl, downloadData, getProperties } from 'aws-amplify/storage';
 import * as fs from 'fs';
 import amplifyconfig from './src/amplify_outputs.json';
+import { getProject, getTodo, listProjects, listTodos } from './src/graphql/queries';
+import { createProject, updateProject, deleteProject, createTodo, updateTodo, deleteTodo } from './src/graphql/mutations';
+import { ProjectStatus } from './src/API';
 
 // Configure Amplify
 Amplify.configure(amplifyconfig);
@@ -87,10 +90,7 @@ const TEST_USER = {
 // Clients
 const publicClient = generateClient({ authMode: 'apiKey' });
 
-// ============================================================
-// GraphQL Queries (Public - no auth required)
-// ============================================================
-
+// Custom query for getRandomQuote (not in generated files)
 const getRandomQuote = /* GraphQL */ `
   query GetRandomQuote {
     getRandomQuote {
@@ -99,158 +99,6 @@ const getRandomQuote = /* GraphQL */ `
       author
       timestamp
       totalQuotes
-    }
-  }
-`;
-
-const listProjects = /* GraphQL */ `
-  query ListProjects {
-    listProjects {
-      items {
-        id
-        title
-        description
-        status
-        deadline
-        color
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-
-const listTodos = /* GraphQL */ `
-  query ListTodos {
-    listTodos {
-      items {
-        id
-        name
-        description
-        images
-        projectID
-        createdAt
-        updatedAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-
-const getProject = /* GraphQL */ `
-  query GetProject($id: ID!) {
-    getProject(id: $id) {
-      id
-      title
-      description
-      status
-      deadline
-      color
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-
-const getTodo = /* GraphQL */ `
-  query GetTodo($id: ID!) {
-    getTodo(id: $id) {
-      id
-      name
-      description
-      images
-      projectID
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-
-// ============================================================
-// GraphQL Mutations (Require authentication)
-// ============================================================
-
-const createProject = /* GraphQL */ `
-  mutation CreateProject($input: CreateProjectInput!) {
-    createProject(input: $input) {
-      id
-      title
-      description
-      status
-      deadline
-      color
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-
-const updateProject = /* GraphQL */ `
-  mutation UpdateProject($input: UpdateProjectInput!) {
-    updateProject(input: $input) {
-      id
-      title
-      description
-      status
-      deadline
-      color
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-
-const deleteProject = /* GraphQL */ `
-  mutation DeleteProject($input: DeleteProjectInput!) {
-    deleteProject(input: $input) {
-      id
-      title
-    }
-  }
-`;
-
-const createTodo = /* GraphQL */ `
-  mutation CreateTodo($input: CreateTodoInput!) {
-    createTodo(input: $input) {
-      id
-      name
-      description
-      images
-      projectID
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-
-const updateTodo = /* GraphQL */ `
-  mutation UpdateTodo($input: UpdateTodoInput!) {
-    updateTodo(input: $input) {
-      id
-      name
-      description
-      images
-      projectID
-      createdAt
-      updatedAt
-      owner
-    }
-  }
-`;
-
-const deleteTodo = /* GraphQL */ `
-  mutation DeleteTodo($input: DeleteTodoInput!) {
-    deleteTodo(input: $input) {
-      id
-      name
     }
   }
 `;
@@ -349,7 +197,7 @@ async function testCreateProject(): Promise<string | null> {
     variables: {
       input: {
         title: `Test Project ${Date.now()}`,
-        status: 'ACTIVE',
+        status: ProjectStatus.ACTIVE,
         description: 'This is a test project created by the test script',
         color: '#007bff',
       },
@@ -377,7 +225,7 @@ async function testUpdateProject(projectId: string): Promise<void> {
         id: projectId,
         title: 'Updated Test Project',
         description: 'This project was updated by the test script',
-        status: 'ON_HOLD',
+        status: ProjectStatus.ON_HOLD,
         color: '#28a745',
       },
     },
