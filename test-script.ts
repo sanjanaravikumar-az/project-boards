@@ -24,67 +24,20 @@ import amplifyconfig from './src/amplify_outputs.json';
 import { getProject, getTodo, listProjects, listTodos } from './src/graphql/queries';
 import { createProject, updateProject, deleteProject, createTodo, updateTodo, deleteTodo } from './src/graphql/mutations';
 import { ProjectStatus } from './src/API';
+import { createTestRunner } from './test-utils';
 
 // Configure Amplify
 Amplify.configure(amplifyconfig);
 
-// ============================================================
-// Test Failure Tracking
-// ============================================================
-interface TestFailure {
-  name: string;
-  error: string;
-}
-
-const failures: TestFailure[] = [];
-
-async function runTest<T>(name: string, testFn: () => Promise<T>): Promise<T | null> {
-  try {
-    const result = await testFn();
-    return result;
-  } catch (error: any) {
-    // Handle different error formats (GraphQL errors, standard errors, objects)
-    let errorMessage: string;
-    if (error.errors?.[0]?.message) {
-      // GraphQL error format
-      errorMessage = error.errors[0].message;
-    } else if (error.message) {
-      // Standard Error
-      errorMessage = error.message;
-    } else if (typeof error === 'object') {
-      // Generic object - stringify it
-      errorMessage = JSON.stringify(error, null, 2);
-    } else {
-      errorMessage = String(error);
-    }
-    failures.push({ name, error: errorMessage });
-    return null;
-  }
-}
-
-function printSummary() {
-  console.log('\n' + '='.repeat(50));
-  console.log('📊 TEST SUMMARY');
-  console.log('='.repeat(50));
-  
-  if (failures.length === 0) {
-    console.log('\n✅ All tests passed!');
-  } else {
-    console.log(`\n❌ ${failures.length} test(s) failed:\n`);
-    failures.forEach(f => {
-      console.log(`  • ${f.name}`);
-      console.log(`    Error: ${f.error}\n`);
-    });
-    process.exit(1);
-  }
-}
+// Initialize test runner
+const { runTest, printSummary } = createTestRunner();
 
 // ============================================================
 // CONFIGURATION - Update with your test user credentials
 // ============================================================
 const TEST_USER = {
-  username: 'sanjana.ravikumar.az@gmail.com',
-  password: 'brownie01',
+  username: 'YOUR_USERNAME_HERE',
+  password: 'YOUR_PASSWORD_HERE',
 };
 
 // Clients
