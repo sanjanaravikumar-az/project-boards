@@ -27,6 +27,7 @@ exports.handler = async (event) => {
     { text: "Programming isn't about what you know; it's about what you can figure out.", author: 'Chris Pine' },
     { text: 'The best error message is the one that never shows up.', author: 'Thomas Fuchs' },
     { text: 'Simplicity is the soul of efficiency.', author: 'Austin Freeman' },
+    { text: ':)', author: 'me'}
   ];
 
   // Get a random quote
